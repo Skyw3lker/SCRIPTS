@@ -9,6 +9,8 @@ import logging
 from tqdm import tqdm
 
 ## Configuration Options ##
+
+## Remove the Range limits in headers in case of production ##
 domain = "LAB"  # Customer name {To be used in the logging}
 domain_IP = "https://10.111.2.33/api" # ADE Rules API endpoint URL {Change the IP or FQDN only}
 security_token = "4b2fa5f1-b4d3-4742-83a3-7c056d65092b"  # Security token for authentication tenant n/a and {admin/admin}
