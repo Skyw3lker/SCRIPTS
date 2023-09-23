@@ -8,8 +8,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #QRadar API endpoint and token
 #ca_bundle = "C:\\Users\\p.merkourakis\\Desktop\\qradar43_enclabs_xyz.crt"
-qradar_url = "https://21.210.1.84/api/gui_app_framework/"
-qradar_token = "67f0992b-edd3-46a1-aa53-4adcf8c7a7e3"
+qradar_url = "https://201.210.11.84/api/gui_app_framework/"
+qradar_token = "67f0992b-edd3-46a1-aa53-4adcf8c7a6fy"
 
 # XForce-Portal
 xforce_url = "https://api.xforce.ibmcloud.com"
