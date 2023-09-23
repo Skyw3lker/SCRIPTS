@@ -9,8 +9,8 @@ import logging
 from tqdm import tqdm
 
 ## Configuration Options ##
+## Remove Range limitation from headers in case of Prod. ##
 
-## Remove the Range limits in headers in case of production ##
 domain = "LAB"  # Customer name {To be used in the logging}
 domain_IP = "https://10.111.2.33/api" # ADE Rules API endpoint URL {Change the IP or FQDN only}
 security_token = "4b2fa5f1-b4d3-4742-83a3-7c056d65092b"  # Security token for authentication tenant n/a and {admin/admin}
@@ -35,10 +35,11 @@ session = requests.Session()
 session.verify = False
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-#Phase One Changing Rules Owner
+#Phase One Changing Custom Rules Owner
 def phase1():
     try:
         # Send a GET request to retrieve the list of rules names, IDs which were created by USER
+        ## Remove Range limitation from headers in case of Prod. ##
         headers = {"Range": "items=0-2", "Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=origin%20%3D%20%22USER%22", headers=headers)
@@ -53,7 +54,7 @@ def phase1():
             unsuccessful_changes = 0
 
             # Phase 1: Changing Rules Owner
-            print("\nPhase 1 of Obrela Owner Changer ...\n")  # Add the header line
+            print("\033[1m"+"\nPhase 1 of Obrela Owner Changer [Changing Custom Rules Owner]"+"\033[0m"" ...\n")  # Add the header line
             logging.info('Phase 1 of Obrela Owner Changer - Changing Rules')
 
             with tqdm(total=total_rules, desc="Changing Rules", unit="rule",
@@ -108,7 +109,8 @@ def phase1():
 #Phase Two Changing Ade Rules Owner
 def phase2():
     try:
-        # Send a GET request to retrieve the list of ade_rules names, IDs which were created by USER
+        # Send a GET request to retrieve the list of ade_rules names, IDs # ""ADE_Rules has no Origin filter""
+        ## Remove Range limitation from headers in case of Prod. ##
         ade_headers = {"Range": "items=0-3", "Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         ade_headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         response = session.get(f"{ade_endpoint}?fields=id%2Cname", headers=ade_headers)
@@ -124,7 +126,7 @@ def phase2():
             unsuccessful_changes = 0
 
             # Phase 2: Changing ade_Rules Owner
-            print("\nPhase 2 of Obrela Owner Changer ...\n")  # Add the header line
+            print("\033[1m"+"\nPhase 2 of Obrela Owner Changer [Changing Ade Rules Owner]"+"\033[0m"" ...\n")  # Add the header line
             logging.info('Phase 2 of Obrela Owner Changer - Changing ade_Rules Owner')
 
             with tqdm(total=total_ade_rules, desc="Changing ade_Rules", unit="rule",
@@ -178,6 +180,7 @@ def phase2():
 def phase3():
     try:
         # Send a GET request to retrieve the list of Building Blocks names, IDs which were created by USER
+        ## Remove Range limitation from headers in case of Prod. ##
         BB_headers = {"Range": "items=0-2", "Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         BB_headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         response = session.get(f"{BB_endpoint}?fields=id%2Cname&filter=origin%20%3D%20%22USER%22", headers=BB_headers)
@@ -191,7 +194,7 @@ def phase3():
             unsuccessful_changes = 0
 
             # Phase 3: Delete BB
-            print("\nPhase 3 of Obrela Owner Changer ...\n")  # Add the header line
+            print("\033[1m"+"\nPhase 3 of Obrela Owner Changer [Changing BB Owner]"+"\033[0m"" ...\n")  # Add the header line
             logging.info('Phase 3 of Obrela Owner Changer - Changing Building Blocks Owner')
 
             with tqdm(total=total_BB, desc="Changing Building Blocks Owner", unit="BB",
@@ -249,12 +252,12 @@ def start_all_phases():
 
 def main():
     while True:
-        print(" Obrela DebtCollector - Please choose an option:")
+        print("\033[1m"+" Obrela CRE Owner Changer - Please choose an option:"+"\033[0m")
         print("     1. Start Phase 1 - Change Owner of Custom Rules")
         print("     2. Start Phase 2 - Change Owner of ADE Rules")
         print("     3. Start Phase 3 - Change Owner of Building Blocks (BB)")
         print("     4. Start All Phases")
-        print("     0. Exit")
+        print("     0. Exit\n")
         choice = input("  Enter your choice: ")
 
         if choice == "1":
