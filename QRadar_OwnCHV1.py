@@ -12,7 +12,7 @@ from tqdm import tqdm
 ## Remove Range limitation from headers in case of Prod. ##
 
 domain = "LAB"  # Customer name {To be used in the logging}
-domain_IP = "https://10.111.2.33/api" # ADE Rules API endpoint URL {Change the IP or FQDN only}
+domain_IP = "https://10.111.2.33/api" # Console API endpoint URL {Change the IP or FQDN only}
 security_token = "4b2fa5f1-b4d3-4742-83a3-7c056d65092b"  # Security token for authentication tenant n/a and {admin/admin}
 new_owner = "admin"  # Set the new Owner Name #case sensrivie, must be an exsisted account on the Console
 ##End of Configuration ##
@@ -65,12 +65,14 @@ def phase1():
                     rule_name = rule["name"]
                     rule_id = rule["id"]
 
-                    # Time to wait for the rule owner to be changed, otherwise break
-                    timeout = 5
+                    # Time to wait for the rule owner to be changed, __Consider the connection speed__
+                    timeout = 20
 
                     if time.time() - start_time > timeout:
-                        logging.error('Owner of Rule "{}" with id {} was not changed to {} within the timeout -5 Sec-. Exiting...'.format(rule_name, rule_id, new_owner))
-                        break
+                        logging.error('Owner of Rule "{}" with id {} was not changed to {} within the timeout -20 Sec-. Exiting...'.format(rule_name, rule_id, new_owner))
+                        #continue: skips the current iteration of a loop and moves to the next iteration.
+                        #break: exits the entire loop, regardless of how many iterations are remaining.
+                        break #test with continue
 
                     owner_url = f'{api_endpoint}/{rule_id}'
                     data = {"owner": new_owner}
@@ -138,10 +140,10 @@ def phase2():
                     rule_id = rule["id"]
 
                     # Time to wait for the rule to be deleted, otherwise break
-                    timeout = 5
+                    timeout = 20
 
                     if time.time() - start_time > timeout:
-                        logging.error('Owner of ade_Rule "{}" with id {} was not changed  to {} within the timeout -5 Sec-. Exiting...'.format(rule_name, rule_id, new_owner))
+                        logging.error('Owner of ade_Rule "{}" with id {} was not changed  to {} within the timeout -20 Sec-. Exiting...'.format(rule_name, rule_id, new_owner))
                         break
 
                     owner_url = f'{ade_endpoint}/{rule_id}'
@@ -206,10 +208,10 @@ def phase3():
                     BB_id = BB["id"]
 
                     # Time to wait for the BB owner to be changed, otherwise break
-                    timeout = 5
+                    timeout = 20
 
                     if time.time() - start_time > timeout:
-                        logging.error('Owner of BB "{}" with id {} was not changed to {} within the timeout -5 Sec. Exiting...'.format(BB_name, BB_id, new_owner))
+                        logging.error('Owner of BB "{}" with id {} was not changed to {} within the timeout -20 Sec. Exiting...'.format(BB_name, BB_id, new_owner))
                         break
 
                     owner_url = f'{BB_endpoint}/{BB_id}'
