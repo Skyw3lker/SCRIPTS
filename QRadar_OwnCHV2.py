@@ -113,8 +113,7 @@ def phase2():
         ## Remove Range limitation from headers in case of Prod. ##
         ade_headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         ade_headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
-        #response = session.get(f"{ade_endpoint}?fields=id%2Cname", headers=ade_headers)
-        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=headers)
+        response = session.get(f"{ade_endpoint}?fields=id%2Cname", headers=ade_headers)
         #print(response.status_code)
 
         if response.status_code == 200:
@@ -186,7 +185,7 @@ def phase3():
         BB_headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         BB_headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         #response = session.get(f"{BB_endpoint}?fields=id%2Cname&filter=origin%20%3D%20%22USER%22", headers=BB_headers)
-        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=headers)
+        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=BB_headers)
 
         if response.status_code == 200:
             # Parse the JSON response
