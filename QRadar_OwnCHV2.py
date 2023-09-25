@@ -8,12 +8,14 @@ import time
 import logging
 from tqdm import tqdm
 
-#### Configuration Options ####
-domain = "xxxx"  # Customer name {To be used in the logging}
-domain_IP = "https://qradar.xxxx.encodemss.xxx/api" # ADE Rules API endpoint URL {Change the IP or FQDN only}
-security_token = "960cd7a8-xxxx-xxxx-xxxx-259683132b33"  # Security token for authentication tenant n/a and {admin/admin}
+## Configuration Options ##
+## Remove Range limitation from headers in case of Prod. ##
+
+domain = "Ergo"  # Customer name {To be used in the logging}
+domain_IP = "https://qradar.XXXXX.encodemss.soc/api" # ADE Rules API endpoint URL {Change the IP or FQDN only}
+security_token = "960cd7a8-d52c-XXXX-XXXX-259683132b33"  # Security token for authentication tenant n/a and {admin/admin}
 new_owner = "admin"  # Set the new Owner Name #case sensrivie, must be an exsisted account on the Console
-####End of Configuration ####
+##End of Configuration ##
 
 api_endpoint = f"{domain_IP}/analytics/rules"  # Rules API endpoint URL 
 ade_endpoint = f"{domain_IP}/analytics/ade_rules"  # ade Rules API endpoint URL 
@@ -39,15 +41,14 @@ def phase1():
         # Send a GET request to retrieve the list of rules names, IDs which were created by USER
         ## Remove Range limitation from headers in case of Prod. ##
         headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
-        headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
-        #response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=origin%20%3D%20%22USER%22", headers=headers) #Filter origin=USER
-        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=headers) #Filter not origin=SYSTEM [include OVERRIVDE and USER]
+        #response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=origin%20%3D%20%22USER%22", headers=headers)
+        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=headers)
 
         if response.status_code == 200:
             # Parse the JSON response
             json_data = response.json()
             total_rules = len(json_data)
-            #print(len(json_data))
+            print(len(json_data))
             #print(json_data)
             successful_changes = 0
             unsuccessful_changes = 0
@@ -74,7 +75,7 @@ def phase1():
 
                     owner_url = f'{api_endpoint}/{rule_id}'
                     data = {"owner": new_owner}
-                    response = session.post(owner_url, headers=headers2, json=data)
+                    response = session.post(owner_url, headers=headers, json=data)
 
                     if response.status_code == 200:
                         successful_changes += 1
@@ -111,9 +112,8 @@ def phase2():
     try:
         # Send a GET request to retrieve the list of ade_rules names, IDs # ""ADE_Rules has no Origin filter""
         ## Remove Range limitation from headers in case of Prod. ##
-        ade_headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
-        ade_headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
-        response = session.get(f"{ade_endpoint}?fields=id%2Cname", headers=ade_headers)
+        headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
+        response = session.get(f"{ade_endpoint}?fields=id%2Cname", headers=headers)
         #print(response.status_code)
 
         if response.status_code == 200:
@@ -147,7 +147,7 @@ def phase2():
 
                     owner_url = f'{ade_endpoint}/{rule_id}'
                     data = {"owner": new_owner}
-                    response = session.post(owner_url, headers=ade_headers2, json=data)
+                    response = session.post(owner_url, headers=headers, json=data)
 
                     if response.status_code == 200:
                         successful_changes += 1                    
@@ -182,10 +182,9 @@ def phase3():
     try:
         # Send a GET request to retrieve the list of Building Blocks names, IDs which were created by USER
         ## Remove Range limitation from headers in case of Prod. ##
-        BB_headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
-        BB_headers2 = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
+        headers = {"Accept": "application/json", "Content-Type": "application/json", "SEC": security_token}
         #response = session.get(f"{BB_endpoint}?fields=id%2Cname&filter=origin%20%3D%20%22USER%22", headers=BB_headers)
-        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=BB_headers)
+        response = session.get(f"{api_endpoint}?fields=id%2Cname&filter=not%20origin%20%3D%20%22SYSTEM%22", headers=headers)
 
         if response.status_code == 200:
             # Parse the JSON response
@@ -217,7 +216,7 @@ def phase3():
 
                     owner_url = f'{BB_endpoint}/{BB_id}'
                     data = {"owner": new_owner}
-                    response = session.post(owner_url, headers=BB_headers2, json=data)
+                    response = session.post(owner_url, headers=headers, json=data)
 
                     if response.status_code == 200:
                         successful_changes += 1
