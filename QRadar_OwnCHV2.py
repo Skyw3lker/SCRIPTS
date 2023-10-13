@@ -155,7 +155,7 @@ def phase2():
                         logging.info('ade_Rule "{}" with id {} owner changing to {} command was accepted.'.format(rule_name, rule_id, new_owner))
                     else:
                         logging.error('Failed to change owner of ade_rule "{}" with id {} to be {}. Response code: {}'.format(rule_name, rule_id, new_owner, response.status_code))
-                        unsuccessful_deletes += 1
+                        unsuccessful_changes += 1
 
                     progress_bar.set_postfix({"Successfully Changed": successful_changes, "Unsuccessfully Changed": unsuccessful_changes})
                     progress_bar.update(1)
